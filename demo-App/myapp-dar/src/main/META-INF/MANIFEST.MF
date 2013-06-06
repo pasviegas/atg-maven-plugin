@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+ATG-Version-Full: 10.2
+ATG-Version: 10.2
+ATG-Required: DSS
