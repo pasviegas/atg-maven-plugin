@@ -20,266 +20,324 @@ import java.util.List;
 
 public class AbstractDarMojo extends AbstractMojo {
 
+	public static final String CONFIG = "/config";
+	public static final String META_INF = "/META-INF";
+	public static final String LIB = "/lib";
+	public static final String J2EE_APPS = "/j2ee-apps";
 
-    public static final String CONFIG = "/config";
-    public static final String META_INF = "/META-INF";
-    public static final String LIB = "/lib";
-    public static final String J2EE_APPS = "/j2ee-apps";
+	public static final String MANIFEST = "/MANIFEST.MF";
 
-    public static final String MANIFEST = "/MANIFEST.MF";        
+	/**
+	 * Root install location of ATG 20077.1
+	 * 
+	 * @parameter expression="${atg.atgHome}" default-value="${env.ATG_HOME}"
+	 * @required
+	 */
+	protected File atgHome;
 
-     /**
-      * Root install location of ATG 7.1
-      *
-      * @parameter expression="${atg.atgHome}" default-value="${env.ATG_HOME}"
-      * @required
-    */
-    protected File atgHome;
+	/**
+	 * The enclosing project.
+	 * 
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
+	 */
+	private MavenProject mavenProject;
 
+	/**
+	 * The enclosing project.
+	 * 
+	 * @return enclosing project.
+	 */
+	protected MavenProject getMavenProject() {
+		return mavenProject;
+	}
 
-    /**
-     * The enclosing project.
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    private MavenProject mavenProject;
+	/**
+	 * EAR Assembler path
+	 * 
+	 * @parameter expression="home/bin/runAssembler"
+	 * @required
+	 */
+	protected String assemblerPath;
 
-    /**
-     * The enclosing project.
-     *
-     * @return enclosing project.
-     */
-    protected MavenProject getMavenProject() {
-        return mavenProject;
-    }
+	/**
+	 * Config path
+	 * 
+	 * @parameter expression="${basedir}/config"
+	 * @required
+	 */
+	protected File configDir;
 
-    /**
-     * EAR Assembler path
-     *
-     * @parameter expression="home/bin/runAssembler"
-     * @required
-     */
-    protected String assemblerPath;
+	/**
+	 * j2ee-apps path
+	 * 
+	 * @parameter expression="${basedir}/j2ee-apps"
+	 * @required
+	 */
+	protected File j2eeDir;
 
-    /**
-     * Config path
-     *
-     * @parameter expression="${basedir}/src/main/config"
-     * @required
-     */
-    protected File configDir;
+	/**
+	 * META-INF path
+	 * 
+	 * @parameter expression="${basedir}/META-INF"
+	 * @required
+	 */
+	protected File metaInfDir;
 
-    /**
-     * META-INF path
-     *
-     * @parameter expression="${basedir}/src/main/META-INF"
-     * @required
-     */
-    protected File metaInfDir;
+	/**
+	 * The name of the DAR file to generate.
+	 * 
+	 * @parameter alias="earName" expression="${project.build.finalName}"
+	 * @required
+	 */
+	protected String finalName;
 
-     /**
-     * The name of the DAR file to generate.
-     *
-     * @parameter alias="earName" expression="${project.build.finalName}"
-     * @required
-     */
-    protected String finalName;
+	/**
+	 * The directory for the generated EAR.
+	 * 
+	 * @parameter expression="${project.build.directory}"
+	 * @required
+	 */
+	protected String outputDirectory;
 
-    /**
-     * The directory for the generated EAR.
-     *
-     * @parameter expression="${project.build.directory}"
-     * @required
-     */
-    protected String outputDirectory;
+	protected String suffix = "";
 
-    protected File moduleRoot;
+	protected String standalone_runinplace;
 
-    public void execute() throws MojoExecutionException, MojoFailureException {
+	protected File moduleRoot;
 
-        try {
-            initModule();
-            initConfig();
-            generateConfigpath();
-            generateClasspath();
-            generateWebpath();
-        } catch(IOException ioe) {
-            throw new MojoExecutionException(ioe.getMessage());
-        }
-    }
+	/**
+	 * pack - should we get packed EAR or not
+	 * 
+	 * @parameter expression="${atg.pack}" default-value="false"
+	 */
+	protected boolean pack;
 
-    /**
-     * Creates temporary ATG Module.
-     *
-     * @throws IOException
-     */
-    protected void initModule() throws IOException {
-        String[] dirs = {"", CONFIG, META_INF, LIB, J2EE_APPS};
+	public void setPack(boolean pack) {
+		this.pack = pack;
+	}
 
-        for (int i = 0; i < dirs.length; i++) {
-            File dir = new File(atgHome, mavenProject.getParent().getArtifactId() + dirs[i]);
-            dir.mkdir();
-            getLog().info("Dependency: " + dir.getAbsolutePath());
-        }
-    }
+	public void execute() throws MojoExecutionException, MojoFailureException {
 
-    /**
-     * Creates configurations in temporary ATG module.
-     *
-     * @throws IOException
-     */
-    protected void initConfig() throws IOException {
-        moduleRoot = new File(atgHome, mavenProject.getParent().getArtifactId());
+		try {
+			initModule();
+			initConfig();
+			// generateConfigpath(); //to Manifest file
+			// generateClasspath(); //to Manifest file
+			// generateWebpath(); //to Manifest file
+		} catch (IOException ioe) {
+			throw new MojoExecutionException(ioe.getMessage());
+		}
+	}
 
-        getLog().info("Module Path: " + moduleRoot.getAbsolutePath());
-        getLog().info("Config Path: " + configDir.getAbsolutePath());
-        getLog().info("META-INF Path: " + metaInfDir.getAbsolutePath());
+	/**
+	 * Creates temporary ATG Module.
+	 * 
+	 * @throws IOException
+	 */
+	protected void initModule() throws IOException {
+		String[] dirs = { "", CONFIG, META_INF, LIB, J2EE_APPS };
 
-        FileUtils.copyDirectoryToDirectory(configDir, moduleRoot);
-        FileUtils.copyDirectoryToDirectory(metaInfDir, moduleRoot);
-    }
+		for (int i = 0; i < dirs.length; i++) {
+			// File dir = new File(atgHome,
+			// mavenProject.getParent().getArtifactId() + dirs[i]);
+			File dir = new File(atgHome, mavenProject.getArtifactId() + dirs[i]);
+			dir.mkdir();
+			getLog().info("Dependency: " + dir.getAbsolutePath());
+		}
+	}
 
-    /**
-     * Generates config path for ATG Module
-     *
-     * @throws IOException
-     */
-    protected void generateConfigpath() throws IOException {
-        String configPathAttributes = "ATG-Config-Path: " + CONFIG;
-        appendConfig(configPathAttributes);        
-    }
+	/**
+	 * Creates configurations in temporary ATG module.
+	 * 
+	 * @throws IOException
+	 */
+	protected void initConfig() throws IOException {
+		// moduleRoot = new File(atgHome,
+		// mavenProject.getParent().getArtifactId());
+		moduleRoot = new File(atgHome, mavenProject.getArtifactId());
 
-    /**
-     * Generates classpath for ATG module
-     *
-     * @throws IOException
-     */
-    protected void generateClasspath() throws IOException {
-        generatePath("ATG-Class-Path:", "jar");
+		getLog().info("Module Path: " + moduleRoot.getAbsolutePath());
+		getLog().info("Config Path: " + configDir.getAbsolutePath());
+		getLog().info("META-INF Path: " + metaInfDir.getAbsolutePath());
 
-    }
+		FileUtils.copyDirectoryToDirectory(configDir, moduleRoot);
+		FileUtils.copyDirectoryToDirectory(metaInfDir, moduleRoot);
+		FileUtils.copyDirectoryToDirectory(j2eeDir, moduleRoot);
+	}
 
-    /**
-     * Generate web path for ATG Module.
-     *
-     * @throws IOException
-     */
-    protected void generateWebpath() throws IOException {
-        generatePath("ATG-Web-Module:", "war");
-    }
+	/**
+	 * Generates config path for ATG Module
+	 * 
+	 * @throws IOException
+	 */
+	protected void generateConfigpath() throws IOException {
+		String configPathAttributes = "ATG-Config-Path: " + CONFIG;
+		appendConfig(configPathAttributes);
+	}
 
-    private void generatePath(String pathAttribute, String attributeType) throws IOException {
+	/**
+	 * Generates classpath for ATG module
+	 * 
+	 * @throws IOException
+	 */
+	protected void generateClasspath() throws IOException {
+		generatePath("ATG-Class-Path:", "jar");
+	}
 
-        String libDir = J2EE_APPS;
+	/**
+	 * Generate web path for ATG Module.
+	 * 
+	 * @throws IOException
+	 */
+	protected void generateWebpath() throws IOException {
+		generatePath("ATG-Web-Module:", "war");
+	}
 
-        if (attributeType != null && attributeType.equals("jar")) {
-            libDir = LIB;
-        }
+	private void generatePath(String pathAttribute, String attributeType)
+			throws IOException {
 
-        Set artifacts = getMavenProject().getArtifacts();
-        Iterator dependencies = artifacts.iterator();
+		String libDir = J2EE_APPS;
 
-        while (dependencies.hasNext()) {
-            Artifact artifact = (Artifact)dependencies.next();
+		if (attributeType != null && attributeType.equals("jar")) {
+			libDir = LIB;
+		}
 
-            if (artifact.getType() != null && artifact.getType().equals(attributeType)) {
-                String fileName = artifact.getFile().getName();
-                pathAttribute += " " + libDir + "/" + fileName;
-            }
-        }
+		Set artifacts = getMavenProject().getArtifacts();
+		Iterator dependencies = artifacts.iterator();
 
-        appendConfig(pathAttribute);
+		while (dependencies.hasNext()) {
+			Artifact artifact = (Artifact) dependencies.next();
 
-    }
+			if (artifact.getType() != null
+					&& artifact.getType().equals(attributeType)) {
+				String fileName = artifact.getFile().getName();
+				pathAttribute += " " + libDir + "/" + fileName;
+			}
+		}
 
-    private void appendConfig(String attributes) throws IOException {
-        File metaInf = new File(atgHome, mavenProject.getParent().getArtifactId() + META_INF + MANIFEST);
+		appendConfig(pathAttribute);
 
-        List collection = FileUtils.readLines(metaInf);
-        collection.add(attributes);
+	}
 
-        FileUtils.writeLines(metaInf, collection);
-    }
+	private void appendConfig(String attributes) throws IOException {
+		// File metaInf = new File(atgHome,
+		// mavenProject.getParent().getArtifactId() + META_INF + MANIFEST);
+		File metaInf = new File(atgHome, mavenProject.getArtifactId()
+				+ META_INF + MANIFEST);
 
-    /**
-     * Returns runAssembler location from ATG home.
-     *
-     * @return
-     * @throws MojoExecutionException
-     */
-    protected File getAssemblerExecutable() throws MojoExecutionException {
-        File executableFile = new File( atgHome, assemblerPath + (SystemUtils.IS_OS_UNIX ? "" : ".bat"));
+		List collection = FileUtils.readLines(metaInf);
+		collection.add(attributes);
 
-        if (!executableFile.isFile() ) {
-            throw new MojoExecutionException(executableFile.getAbsolutePath() + " does not exist or is not a file");
-        }
+		FileUtils.writeLines(metaInf, collection);
+	}
 
-        return executableFile;
-    }
+	/**
+	 * Returns runAssembler location from ATG home.
+	 * 
+	 * @return
+	 * @throws MojoExecutionException
+	 */
+	protected File getAssemblerExecutable() throws MojoExecutionException {
+		File executableFile = new File(atgHome, assemblerPath
+				+ (SystemUtils.IS_OS_UNIX ? "" : ".bat"));
 
-    /**
-     * Generates the commandline to be executed.
-     *
-     * @return the commandline created
-     * @throws MojoExecutionException if any failure occurs
-     */
-    protected Commandline getCommandLine() throws MojoExecutionException {
-        Commandline commandLine = new Commandline();
-        commandLine.setExecutable(getAssemblerExecutable().getAbsolutePath());
-        File target  = new File(outputDirectory);
-        target.mkdir();
-        commandLine.setWorkingDirectory(target.getAbsolutePath());
+		if (!executableFile.isFile()) {
+			throw new MojoExecutionException(executableFile.getAbsolutePath()
+					+ " does not exist or is not a file");
+		}
 
-        commandLine.createArg().setLine("-pack");
-        commandLine.createArg().setLine(finalName + ".ear");
-        commandLine.createArg().setLine("-m " + getMavenProject().getParent().getArtifactId());
+		return executableFile;
+	}
 
-        return commandLine;
-    }
+	/**
+	 * Generates the commandline to be executed.
+	 * 
+	 * @return the commandline created
+	 * @throws MojoExecutionException
+	 *             if any failure occurs
+	 */
+	protected Commandline getCommandLine() throws MojoExecutionException {
+		Commandline commandLine = new Commandline();
+		commandLine.setExecutable(getAssemblerExecutable().getAbsolutePath());
 
-    /**
-     * Executes a commandLine
-     *
-     * @param commandline to execute
-     * @throws MojoFailureException if any failure occurs.
-     */
-    protected void executeCommandLine(Commandline commandline) throws MojoFailureException {
-        try {
-            StreamConsumer errConsumer = getStreamConsumer( "error" );
-            StreamConsumer infoConsumer = getStreamConsumer( "info" );
+		File target = createTargetDyrectory();
 
-            int returncode = CommandLineUtils.executeCommandLine( commandline, infoConsumer, errConsumer);
+		commandLine.setWorkingDirectory(target.getAbsolutePath());
 
-            String logmsg = "Return code: " + returncode;
-            if ( returncode != 0 ) {
-                throw new MojoFailureException( logmsg );
-            } else {
-                getLog().info( logmsg );
-            }
-        } catch (CommandLineException e) {
-            throw new MojoFailureException(e.getMessage());
-        }
-    }
+		if (pack)
+			commandLine.createArg().setLine("-pack");
 
-     protected StreamConsumer getStreamConsumer(final String level) {
-        StreamConsumer consumer = new StreamConsumer() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.codehaus.plexus.util.cli.StreamConsumer#consumeLine(java.lang.String)
-             */
-            public void consumeLine(String line) {
-                if (level.equalsIgnoreCase( "info" )) {
-                    getLog().info(line);
-                } else {
-                    getLog().error(line);
-                }
-            }
-        };
+		commandLine.createArg().setLine("-liveconfig");
+		commandLine.createArg().setLine(standalone_runinplace);
+		commandLine.createArg().setLine(
+				target.getAbsolutePath() + "\\" + finalName + suffix + ".ear");
 
-        return consumer;
-    }
-    
+		commandLine.createArg().setLine(
+				"-m " + getMavenProject().getArtifactId());
+
+		System.out.println("Cmd to run atg module assembler:\n"
+				+ commandLine.toString());
+
+		return commandLine;
+	}
+
+	public File createTargetDyrectory() {
+		File target = new File(outputDirectory);
+
+		if (!target.exists())
+			target.mkdir();
+		return target;
+	}
+
+	/**
+	 * Executes a commandLine
+	 * 
+	 * @param commandline
+	 *            to execute
+	 * @throws MojoFailureException
+	 *             if any failure occurs.
+	 */
+	protected void executeCommandLine(Commandline commandline)
+			throws MojoFailureException {
+		try {
+			StreamConsumer errConsumer = getStreamConsumer("error");
+			StreamConsumer infoConsumer = getStreamConsumer("info");
+
+			int returncode = CommandLineUtils.executeCommandLine(commandline,
+					infoConsumer, errConsumer);
+
+			String logmsg = "Return code: " + returncode;
+			if (returncode != 0) {
+				throw new MojoFailureException(logmsg);
+			} else {
+				getLog().info(logmsg);
+			}
+		} catch (CommandLineException e) {
+			throw new MojoFailureException(e.getMessage());
+		}
+	}
+
+	protected StreamConsumer getStreamConsumer(final String level) {
+		StreamConsumer consumer = new StreamConsumer() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * org.codehaus.plexus.util.cli.StreamConsumer#consumeLine(java.
+			 * lang.String)
+			 */
+			public void consumeLine(String line) {
+				if (level.equalsIgnoreCase("info")) {
+					getLog().info(line);
+				} else {
+					getLog().error(line);
+				}
+			}
+		};
+
+		return consumer;
+	}
+
 }

@@ -7,7 +7,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 
-
 import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 
@@ -17,124 +16,165 @@ import java.util.*;
 
 /**
  * Goal which touches a timestamp file.
- *
+ * 
  * @goal run
  * @phase generate-sources
  * @requiresDependencyResolution runtime
  */
-public class DarMojo extends AbstractDarMojo {    
+public class DarMojo extends AbstractDarMojo {
 
-    /**
-     * The Jar archiver.
-     *
-     * @parameter expression="${component.org.codehaus.plexus.archiver.Archiver#jar}"
-     * @required
-     */
-    private JarArchiver jarArchiver;
+	/**
+	 * StandaloneAndRuninplace - show if we need to build two different types of
+	 * EAR standalone and run-in-place both
+	 * 
+	 * @parameter expression="${atg.StandaloneAndRuninplace}"
+	 *            default-value="false"
+	 */
+	protected boolean StandaloneAndRuninplace;
 
-    /**
-     * The maven archiver to use.
-     *
-     * @parameter
-     */
-    private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void execute() throws MojoExecutionException, MojoFailureException {
+	public void setStandaloneAndRuninplace(boolean standaloneAndRuninplace) {
+		StandaloneAndRuninplace = standaloneAndRuninplace;
+	}
 
-        super.execute();
+	/**
+	 * The Jar archiver.
+	 * 
+	 * @parameter 
+	 *            expression="${component.org.codehaus.plexus.archiver.Archiver#jar}"
+	 * @required
+	 */
+	private JarArchiver jarArchiver;
 
-        try {
-            copyDependencies();
-        } catch(IOException ioe) {
-            throw new MojoExecutionException(ioe.getMessage());
-        }
+	/**
+	 * The maven archiver to use.
+	 * 
+	 * @parameter
+	 */
+	private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
 
-        executeCommandLine(getCommandLine());
-        pack();
-        cleanup();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void execute() throws MojoExecutionException, MojoFailureException {
 
+		super.execute();
 
-    /**
-     * Copy all dependencies into temporary ATG Module
-     *
-     * @throws IOException
-     */
-    protected void copyDependencies() throws IOException {
-        File libFolder = new File(atgHome, getMavenProject().getParent().getArtifactId() + LIB);
-        File j2eeFolder = new File(atgHome, getMavenProject().getParent().getArtifactId() + J2EE_APPS);
+		try {
+			copyDependencies();
+		} catch (IOException ioe) {
+			throw new MojoExecutionException(ioe.getMessage());
+		}
 
-        Set artifacts = getMavenProject().getArtifacts();
-        Iterator dependencies = artifacts.iterator();
+		if (!StandaloneAndRuninplace) {
+			suffix = "";
 
-        while (dependencies.hasNext()) {
-            Artifact artifact = (Artifact)dependencies.next();
-            File file = artifact.getFile();
-            if (artifact.getType() != null && artifact.getType().equals("jar")) {
-                FileUtils.copyFileToDirectory(file, libFolder);
-            } else {
-                FileUtils.copyFileToDirectory(file, j2eeFolder);    
-            }
-        }
-    }
+			standalone_runinplace = "-standalone";
 
-    /**
-     * Creates DAR archive from temporary ATG Module.
-     *
-     * @throws MojoFailureException
-     */
-    protected void pack() throws MojoFailureException {
-        try {
-            MavenArchiver archiver = new MavenArchiver();
-            final JarArchiver jarArchiver = getJarArchiver();
-            archiver.setArchiver( jarArchiver );
+			executeCommandLine(getCommandLine());
+		}else{
+			//for testers
+			suffix = "_tes";
 
-            File darFile = new File(outputDirectory, finalName + ".dar");
-            getLog().info("darFile = " + darFile.getAbsolutePath());
+			standalone_runinplace = "-standalone";
 
-            archiver.setOutputFile(darFile);
+			executeCommandLine(getCommandLine());
+			//for developers
+			this.pack = false;
+			suffix = "_dev";
+          
+			standalone_runinplace = "-run-in-place";
 
-            getLog().info("Module Root: " + moduleRoot.getAbsolutePath());
+			executeCommandLine(getCommandLine());			
+		}
+			
 
-            File metaInf = new File(moduleRoot, META_INF + MANIFEST);
+		// packDar();
+		// cleanup();
+	}
 
-            getLog().info("METANIFEST: " + metaInf.getAbsolutePath());
+	/**
+	 * Copy all dependencies into temporary ATG Module
+	 * 
+	 * @throws IOException
+	 */
+	protected void copyDependencies() throws IOException {
+		// File libFolder = new File(atgHome,
+		// getMavenProject().getParent().getArtifactId() + LIB);
+		// File j2eeFolder = new File(atgHome,
+		// getMavenProject().getParent().getArtifactId() + J2EE_APPS);
+		File libFolder = new File(atgHome, getMavenProject().getArtifactId()
+				+ LIB);
+		File j2eeFolder = new File(atgHome, getMavenProject().getArtifactId()
+				+ J2EE_APPS);
 
-            archive.setManifestFile(metaInf);
+		Set artifacts = getMavenProject().getArtifacts();
+		Iterator dependencies = artifacts.iterator();
 
-            archiver.getArchiver().addDirectory(moduleRoot);
-            archiver.createArchive(getMavenProject(), archive);
-        } catch(Exception e) {
-            throw new MojoFailureException(e.getMessage());
-        }
-    }
+		while (dependencies.hasNext()) {
+			Artifact artifact = (Artifact) dependencies.next();
+			File file = artifact.getFile();
+			if (artifact.getType() != null && artifact.getType().equals("jar")) {
+				FileUtils.copyFileToDirectory(file, libFolder);
+			} else {
+				FileUtils.copyFileToDirectory(file, j2eeFolder);
+			}
+		}
+	}
 
-    /**
-     * Deletes temporary ATG Module
-     *
-     * @throws MojoFailureException
-     */
-    protected void cleanup() throws MojoFailureException {
-        try {
-            FileUtils.deleteDirectory(moduleRoot);
-        } catch(IOException ioe) {
-            throw new MojoFailureException(ioe.getMessage());
-        }
-    }
+	/**
+	 * Creates DAR archive from temporary ATG Module.
+	 * 
+	 * @throws MojoFailureException
+	 */
+	protected void packDar() throws MojoFailureException {
+		try {
+			MavenArchiver archiver = new MavenArchiver();
+			final JarArchiver jarArchiver = getJarArchiver();
+			archiver.setArchiver(jarArchiver);
 
-    /**
-     * Returns the {@link JarArchiver} implementation used
-     * to package the DAR file.
-     * <p/>
-     * By default the archiver is obtained from the Plexus container.
-     *
-     * @return the archiver
-     */
-    protected JarArchiver getJarArchiver() {
-        return jarArchiver;
-    }
+			File darFile = new File(outputDirectory, finalName + ".dar");
+			getLog().info("darFile = " + darFile.getAbsolutePath());
+
+			archiver.setOutputFile(darFile);
+
+			getLog().info("Module Root: " + moduleRoot.getAbsolutePath());
+
+			File metaInf = new File(moduleRoot, META_INF + MANIFEST);
+
+			getLog().info("METANIFEST: " + metaInf.getAbsolutePath());
+
+			archive.setManifestFile(metaInf);
+
+			archiver.getArchiver().addDirectory(moduleRoot);
+			archiver.createArchive(getMavenProject(), archive);
+		} catch (Exception e) {
+			throw new MojoFailureException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Deletes temporary ATG Module
+	 * 
+	 * @throws MojoFailureException
+	 */
+	protected void cleanup() throws MojoFailureException {
+		try {
+			FileUtils.deleteDirectory(moduleRoot);
+		} catch (IOException ioe) {
+			throw new MojoFailureException(ioe.getMessage());
+		}
+	}
+
+	/**
+	 * Returns the {@link JarArchiver} implementation used to package the DAR
+	 * file.
+	 * <p/>
+	 * By default the archiver is obtained from the Plexus container.
+	 * 
+	 * @return the archiver
+	 */
+	protected JarArchiver getJarArchiver() {
+		return jarArchiver;
+	}
 
 }

@@ -35,7 +35,11 @@
                         <id>generate-sources</id>
                         <phase>generate-sources</phase>
                         <configuration>
+                            <outputDirectory>${basedir}/target/test</outputDirectory>
                             <atgHome>D:/GCWorkbench/ATG</atgHome>
+                            <j2eeDir>${project.parent.basedir}/myapp-war</j2eeDir>
+                            <configDir>${project.parent.basedir}/myapp-dar/src/main/config</configDir>
+                            <metaInfDir>${project.parent.basedir}/myapp-dar/src/main/META-INF</metaInfDir>
                         </configuration>
                         <goals>
                             <goal>run</goal>
