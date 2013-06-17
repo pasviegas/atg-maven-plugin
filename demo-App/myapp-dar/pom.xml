@@ -35,7 +35,10 @@
                         <id>generate-sources</id>
                         <phase>generate-sources</phase>
                         <configuration>
+                        <StandaloneAndRuninplace></StandaloneAndRuninplace>
                             <atgHome>D:/GCWorkbench/ATG</atgHome>
+                            <StandaloneAndRuninplace>false</StandaloneAndRuninplace>
+                            <pack>false</pack>
                             <j2eeDir>${project.parent.basedir}/myapp-war</j2eeDir>
                             <configDir>${project.parent.basedir}/myapp-dar/src/main/config</configDir>
                             <metaInfDir>${project.parent.basedir}/myapp-dar/src/main/META-INF</metaInfDir>
