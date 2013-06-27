@@ -1,0 +1,33 @@
+
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>atg-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <atgHome>D:\GCWorkbench\ATG</atgHome>
+                    <StandaloneAndRuninplace>false</StandaloneAndRuninplace>
+                    <pack>false</pack>
+                    <assemblerPath>home\bin\runAssembler</assemblerPath>
+                    <finalName>myapp</finalName>
+                    <j2eeDir>${project.parent.basedir}/myapp-war</j2eeDir>
+                    <configDir>${project.parent.basedir}/myapp-dar/src/main/config</configDir>
+                    <metaInfDir>${project.parent.basedir}/myapp-dar/src/main/META-INF</metaInfDir>
+                </configuration>
+                <dependencies>
+
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

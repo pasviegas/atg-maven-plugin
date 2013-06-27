@@ -1,64 +1,70 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>mojo-sandbox</artifactId>
+        <version>4</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.mojo</groupId>
-    <artifactId>mojo-sandbox</artifactId>
-    <version>4</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.codehaus.mojo</groupId>
-  <artifactId>atg-maven-plugin</artifactId>
-  <packaging>maven-plugin</packaging>
-  <version>1.0-alpha-1-SNAPSHOT</version>
-  <name>ATG Maven Plugin</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>         
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>2.0.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-      <version>2.0.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-settings</artifactId>
-      <version>2.0.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-      <version>2.0.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-archiver</artifactId>
-      <version>2.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-      <version>1.5.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.4</version>
-    </dependency>
-     <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <dependency>
-        <groupId>ant</groupId>
-        <artifactId>ant</artifactId>
-        <version>1.6.5</version>
-    </dependency>
-  </dependencies>
+    <artifactId>atg-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <version>1.0-alpha-1-SNAPSHOT</version>
+    <name>ATG Maven Plugin</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>2.0.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>2.0.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+            <version>2.0.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>2.0.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-archiver</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-plugin-testing-harness</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -81,52 +87,52 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <reporting>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-changelog-plugin</artifactId>
-            <version>2.1</version>
-          </plugin>
-          <plugin>
-            <artifactId>maven-changes-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <configuration>
-              <threshold>Normal</threshold>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jdepend-maven-plugin</artifactId>
-          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+                <version>2.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-changes-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <threshold>Normal</threshold>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
         </plugins>
-      </reporting>
-<repositories>
-    <repository>
-      <id>Codehaus Snapshots</id>
-      <url>http://snapshots.repository.codehaus.org/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>Codehaus Snapshots</id>
-      <url>http://snapshots.repository.codehaus.org/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>  <!-- Workaround for MNG-2974, see note below -->
-      </releases>
-    </pluginRepository>
-  </pluginRepositories> 
+    </reporting>
+    <repositories>
+        <repository>
+            <id>Codehaus Snapshots</id>
+            <url>http://snapshots.repository.codehaus.org/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Codehaus Snapshots</id>
+            <url>http://snapshots.repository.codehaus.org/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>  <!-- Workaround for MNG-2974, see note below -->
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

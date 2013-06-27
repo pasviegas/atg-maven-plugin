@@ -15,6 +15,7 @@
             <groupId>net.sf.atgdust</groupId>
             <artifactId>atgdust</artifactId>
             <version>1.2.1-alpha</version>
+            <scope>test</scope>
         </dependency>
         <!-- START: ATG Jars -->
         <!-- -->
