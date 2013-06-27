@@ -123,9 +123,9 @@ public class AbstractDarMojo extends AbstractMojo {
 		try {
 			initModule();
 			initConfig();
-			// generateConfigpath(); //to Manifest file
-			// generateClasspath(); //to Manifest file
-			// generateWebpath(); //to Manifest file
+			 generateConfigpath(); //to Manifest file
+//			 generateClasspath(); //to Manifest file
+			 generateWebpath(); //to Manifest file
 		} catch (IOException ioe) {
 			throw new MojoExecutionException(ioe.getMessage());
 		}
@@ -270,7 +270,7 @@ public class AbstractDarMojo extends AbstractMojo {
 			commandLine.createArg().setLine("-pack");
 
 		commandLine.createArg().setLine("-liveconfig");
-		commandLine.createArg().setLine(standalone_runinplace);
+//		commandLine.createArg().setLine(standalone_runinplace);
 		commandLine.createArg().setLine(
 				target.getAbsolutePath() + "\\" + finalName + suffix + ".ear");
 
