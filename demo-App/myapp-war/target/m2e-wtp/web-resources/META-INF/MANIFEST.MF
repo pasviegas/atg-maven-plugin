@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-ATG-Module-Uri: myapp-war-1.0.0-SNAPSHOT.war
-ATG-Context-Root: /MyApp
-Build-Jdk: 1.6.0_34
-Built-By: slamhan
-Created-By: Maven Integration for Eclipse
-
