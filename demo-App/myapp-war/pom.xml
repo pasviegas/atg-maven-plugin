@@ -25,6 +25,18 @@
                 <version>2.3</version>
                 <configuration>
                     <archive>
+                    <addMavenDescriptor>false</addMavenDescriptor>
+                    <!-- Those configure will create in MANIFEST.MF,it will used when assemble to ear.-->
+                    <!-- 
+                            Manifest-Version: 1.0
+                            ATG-Module-Uri: myapp-war-1.0.0-SNAPSHOT.war
+                            ATG-Context-Root: /MyApp
+                            Build-Jdk: 1.6.0_34
+                            Built-By: xxx
+                            ATG-Module-Version: myapp-war-1.0.0-SNAPSHOT.war
+                            Created-By: Apache Maven 3.0.5
+                            Archiver-Version: Plexus Archiver
+                     -->
                         <manifestEntries>
                             <ATG-Module-Uri>${project.build.finalName}.war</ATG-Module-Uri>
                             <ATG-Context-Root>/MyApp</ATG-Context-Root>
