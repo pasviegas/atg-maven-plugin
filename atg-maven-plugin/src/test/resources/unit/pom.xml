@@ -10,7 +10,7 @@
                         <id>generate-sources</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>atg-assemble</goal>
                         </goals>
                     </execution>
                 </executions>
