@@ -18,10 +18,10 @@
                     <atgHome>D:\GCWorkbench\ATG</atgHome>
                     <!-- Default assemblerPath home\bin\runAssembler -->
                     <!-- <assemblerPath>home\bin\runAssembler</assemblerPath> -->
-                    <finalName>myapp</finalName>
-                    <j2eeDir>${project.parent.basedir}/myapp-war</j2eeDir>
-                    <configDir>${project.parent.basedir}/myapp-dar/src/main/config</configDir>
-                    <metaInfDir>${project.parent.basedir}/myapp-dar/src/main/META-INF</metaInfDir>
+                    <finalName>atg-maven-plugin</finalName>
+                    <j2eeDir>${project.basedir}/webapp</j2eeDir>
+                    <configDir>${project.basedir}/src/main/config</configDir>
+                    <metaInfDir>${project.basedir}/src/main/META-INF</metaInfDir>
                 </configuration>
                 <dependencies>
 
