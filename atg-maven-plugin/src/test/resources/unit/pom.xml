@@ -16,9 +16,8 @@
                 </executions>
                 <configuration>
                     <atgHome>D:\GCWorkbench\ATG</atgHome>
-                    <StandaloneAndRuninplace>false</StandaloneAndRuninplace>
-                    <pack>false</pack>
-                    <assemblerPath>home\bin\runAssembler</assemblerPath>
+                    <!-- Default assemblerPath home\bin\runAssembler -->
+                    <!-- <assemblerPath>home\bin\runAssembler</assemblerPath> -->
                     <finalName>myapp</finalName>
                     <j2eeDir>${project.parent.basedir}/myapp-war</j2eeDir>
                     <configDir>${project.parent.basedir}/myapp-dar/src/main/config</configDir>
