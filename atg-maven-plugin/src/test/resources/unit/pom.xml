@@ -19,9 +19,9 @@
                     <!-- Default assemblerPath home\bin\runAssembler -->
                     <!-- <assemblerPath>home\bin\runAssembler</assemblerPath> -->
                     <finalName>atg-maven-plugin</finalName>
-                    <j2eeDir>${project.basedir}/webapp</j2eeDir>
-                    <configDir>${project.basedir}/src/main/config</configDir>
-                    <metaInfDir>${project.basedir}/src/main/META-INF</metaInfDir>
+                    <j2eePath>${project.basedir}/webapp</j2eePath>
+                    <atgConfigPath>${project.basedir}/src/main/config</atgConfigPath>
+                    <atgMetaInfPath>${project.basedir}/src/main/META-INF</atgMetaInfPath>
                 </configuration>
                 <dependencies>
 

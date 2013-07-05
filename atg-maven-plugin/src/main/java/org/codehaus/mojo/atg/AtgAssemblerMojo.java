@@ -77,7 +77,7 @@ public class AtgAssemblerMojo extends AbstractMojo {
      * @parameter expression="${basedir}/config"
      * @required
      */
-    protected File configDir;
+    protected File atgConfigPath;
 
     /**
      * j2ee-apps path
@@ -85,7 +85,7 @@ public class AtgAssemblerMojo extends AbstractMojo {
      * @parameter expression="${basedir}/j2ee-apps"
      * @required
      */
-    protected File j2eeDir;
+    protected File j2eePath;
 
     /**
      * META-INF path
@@ -93,7 +93,7 @@ public class AtgAssemblerMojo extends AbstractMojo {
      * @parameter expression="${basedir}/META-INF"
      * @required
      */
-    protected File metaInfDir;
+    protected File atgMetaInfPath;
 
     /**
      * The name of the DAR file to generate.
@@ -201,12 +201,12 @@ public class AtgAssemblerMojo extends AbstractMojo {
         moduleRoot = new File(atgHome, mavenProject.getArtifactId());
 
         getLog().info("Module Path: " + moduleRoot.getAbsolutePath());
-        getLog().info("Config Path: " + configDir.getAbsolutePath());
-        getLog().info("META-INF Path: " + metaInfDir.getAbsolutePath());
+        getLog().info("Config Path: " + atgConfigPath.getAbsolutePath());
+        getLog().info("META-INF Path: " + atgMetaInfPath.getAbsolutePath());
 
-        FileUtils.copyDirectoryToDirectory(configDir, moduleRoot);
-        FileUtils.copyDirectoryToDirectory(metaInfDir, moduleRoot);
-        FileUtils.copyDirectoryToDirectory(j2eeDir, moduleRoot);
+        FileUtils.copyDirectoryToDirectory(atgConfigPath, moduleRoot);
+        FileUtils.copyDirectoryToDirectory(atgMetaInfPath, moduleRoot);
+        FileUtils.copyDirectoryToDirectory(j2eePath, moduleRoot);
     }
 
     /**
