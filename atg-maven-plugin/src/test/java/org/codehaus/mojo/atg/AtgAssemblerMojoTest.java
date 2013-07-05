@@ -4,6 +4,7 @@ package org.codehaus.mojo.atg;
 import java.io.File;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
+import static org.mockito.Mockito.*;
 
 public class AtgAssemblerMojoTest extends AbstractMojoTestCase {
     private File pom;
@@ -58,4 +59,16 @@ public class AtgAssemblerMojoTest extends AbstractMojoTestCase {
     public void test_should_return_atg_j2ee_info_path__when_get_j2ee_apps_path() throws Exception {
         assertEquals("${project.basedir}\\webapp", myMojo.j2eePath.getPath());
     }
+
+    /**
+     * @throws Exception if any
+     */
+    public void test_should_throws_exception_when_get_atg_home_is_empty() throws Exception {
+        AtgAssemblerMojo atgAssemblerMojo = mock(AtgAssemblerMojo.class);
+        atgAssemblerMojo.atgHome = mock(File.class);
+        when(atgAssemblerMojo.atgHome.getPath()).thenReturn("");
+
+        assertEquals("", atgAssemblerMojo.atgHome.getPath());
+    }
+
 }
