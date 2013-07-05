@@ -4,9 +4,21 @@ package org.codehaus.mojo.atg;
 import java.io.File;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
+import org.apache.maven.project.MavenProject;
+
 import static org.mockito.Mockito.*;
 
 public class AtgAssemblerMojoTest extends AbstractMojoTestCase {
+    private static String OS = System.getProperty("os.name").toLowerCase();
+
+    public static boolean isLinux() {
+        return OS.indexOf("linux") >= 0;
+    }
+
+    public static boolean isWindows() {
+        return OS.indexOf("windows") >= 0;
+    }
+
     private File pom;
     private AtgAssemblerMojo myMojo;
 
@@ -60,15 +72,25 @@ public class AtgAssemblerMojoTest extends AbstractMojoTestCase {
         assertEquals("webapp", myMojo.j2eePath.getPath());
     }
 
-    /**
-     * @throws Exception if any
-     */
-    public void test_should_throws_exception_when_get_atg_home_is_empty() throws Exception {
-        AtgAssemblerMojo atgAssemblerMojo = mock(AtgAssemblerMojo.class);
-        atgAssemblerMojo.atgHome = mock(File.class);
-        when(atgAssemblerMojo.atgHome.getPath()).thenReturn("");
-
-        assertEquals("", atgAssemblerMojo.atgHome.getPath());
+    public void test_should_return_not_null_when_get_maven_project() {
+        assertNotNull(myMojo.getMavenProject());
     }
 
+    public void test_should_return_atg_project_dir_when_call_create_atg_project_dir() {
+        if (isWindows()) {
+            assertEquals("ATG\\app-ear", myMojo.createAtgProjectDir().getPath());
+        }
+        else if (isLinux()) {
+            assertEquals("ATG/app-ear", myMojo.createAtgProjectDir().getPath());
+        }
+    }
+
+    public void test_should_return_atg_config_dir_when_call_create_atg_config_dir() {
+        if (isWindows()) {
+            assertEquals("ATG\\app-ear\\config", myMojo.createAtgConfigDir().getPath());
+        }
+        else if (isLinux()) {
+            assertEquals("ATG/app-ear/config", myMojo.createAtgConfigDir().getPath());
+        }
+    }
 }

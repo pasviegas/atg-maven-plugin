@@ -52,7 +52,7 @@ public class AtgAssemblerMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private MavenProject mavenProject;
+    protected MavenProject mavenProject;
 
     /**
      * The enclosing project.
@@ -490,6 +490,23 @@ public class AtgAssemblerMojo extends AbstractMojo {
      */
     protected JarArchiver getJarArchiver() {
         return jarArchiver;
+    }
+
+    private File createDir(String childPath) {
+        File dir = new File(atgHome, childPath);
+        dir.mkdir();
+        return dir;
+    }
+
+    public File createAtgProjectDir() {
+        File dir = createDir(mavenProject.getArtifactId());
+        return dir;
+    }
+
+    public File createAtgConfigDir() {
+        File dir = createDir(mavenProject.getArtifactId() + CONFIG);
+        dir.mkdir();
+        return dir;
     }
 
 }
