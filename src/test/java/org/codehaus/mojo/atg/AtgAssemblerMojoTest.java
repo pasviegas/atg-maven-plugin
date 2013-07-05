@@ -36,28 +36,28 @@ public class AtgAssemblerMojoTest extends AbstractMojoTestCase {
      * @throws Exception if any
      */
     public void test_should_return_atg_home_when_get_atg_home() throws Exception {
-        assertEquals("D:\\GCWorkbench\\ATG", myMojo.atgHome.getPath());
+        assertEquals("ATG", myMojo.atgHome.getPath());
     }
 
     /**
      * @throws Exception if any
      */
     public void test_should_return_atg_config_path__when_get_atg_config_path() throws Exception {
-        assertEquals("${project.basedir}\\src\\main\\config", myMojo.atgConfigPath.getPath());
+        assertEquals("config", myMojo.atgConfigPath.getPath());
     }
 
     /**
      * @throws Exception if any
      */
     public void test_should_return_atg_meta_info_path__when_get_atg_meta_info() throws Exception {
-        assertEquals("${project.basedir}\\src\\main\\META-INF", myMojo.atgMetaInfPath.getPath());
+        assertEquals("META-INF", myMojo.atgMetaInfPath.getPath());
     }
 
     /**
      * @throws Exception if any
      */
     public void test_should_return_atg_j2ee_info_path__when_get_j2ee_apps_path() throws Exception {
-        assertEquals("${project.basedir}\\webapp", myMojo.j2eePath.getPath());
+        assertEquals("webapp", myMojo.j2eePath.getPath());
     }
 
     /**

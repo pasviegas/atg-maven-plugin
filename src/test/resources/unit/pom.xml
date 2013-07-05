@@ -15,13 +15,13 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <atgHome>D:\GCWorkbench\ATG</atgHome>
-                    <!-- Default assemblerPath home\bin\runAssembler -->
-                    <!-- <assemblerPath>home\bin\runAssembler</assemblerPath> -->
+                    <atgHome>ATG</atgHome>
+                    <!-- Default assemblerPath home//bin//runAssembler -->
+                    <!-- <assemblerPath>home/bin//runAssembler</assemblerPath> -->
                     <finalName>atg-maven-plugin</finalName>
-                    <j2eePath>${project.basedir}/webapp</j2eePath>
-                    <atgConfigPath>${project.basedir}/src/main/config</atgConfigPath>
-                    <atgMetaInfPath>${project.basedir}/src/main/META-INF</atgMetaInfPath>
+                    <j2eePath>webapp</j2eePath>
+                    <atgConfigPath>config</atgConfigPath>
+                    <atgMetaInfPath>META-INF</atgMetaInfPath>
                 </configuration>
                 <dependencies>
 
