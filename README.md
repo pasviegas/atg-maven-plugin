@@ -2,9 +2,10 @@ atg-maven-plugin
 ================
 
 using atg-maven-plugin to packaging to ear file.it very easy to use.
-Config example:
-================================================================================
-<project>
+
+Maven Example
+----------
+
     <build>
         <plugins>
             <plugin>
@@ -29,5 +30,7 @@ Config example:
             </plugin>
         </plugins>
     </build>
-</project>
-================================================================================
+
+
+
+
