@@ -20,10 +20,13 @@ import java.util.List;
 
 public class AbstractDarMojo extends AbstractMojo {
 
-	public static final String CONFIG = "/config";
+	public static final String CONFIG_PATH = "config";
+	public static final String CONFIG = "/" + CONFIG_PATH;
 	public static final String META_INF = "/META-INF";
 	public static final String LIB = "/lib";
-	public static final String J2EE_APPS = "/j2ee-apps";
+
+	public static final String J2EE_APPS_PATH = "j2ee-apps";
+	public static final String J2EE_APPS = "/" + J2EE_APPS_PATH;
 
 	public static final String MANIFEST = "/MANIFEST.MF";
 
@@ -173,7 +176,7 @@ public class AbstractDarMojo extends AbstractMojo {
 	 * @throws IOException
 	 */
 	protected void generateConfigpath() throws IOException {
-		String configPathAttributes = "ATG-Config-Path: " + CONFIG;
+		String configPathAttributes = "ATG-Config-Path: " + CONFIG_PATH;
 		appendConfig(configPathAttributes);
 	}
 
@@ -198,7 +201,7 @@ public class AbstractDarMojo extends AbstractMojo {
 	private void generatePath(String pathAttribute, String attributeType)
 			throws IOException {
 
-		String libDir = J2EE_APPS;
+		String libDir = J2EE_APPS_PATH;
 
 		if (attributeType != null && attributeType.equals("jar")) {
 			libDir = LIB;
@@ -272,7 +275,7 @@ public class AbstractDarMojo extends AbstractMojo {
 		commandLine.createArg().setLine("-liveconfig");
 //		commandLine.createArg().setLine(standalone_runinplace);
 		commandLine.createArg().setLine(
-				target.getAbsolutePath() + "\\" + finalName + suffix + ".ear");
+				target.getAbsolutePath() + "/" + finalName + suffix + ".ear");
 
 		commandLine.createArg().setLine(
 				"-m " + getMavenProject().getArtifactId());
